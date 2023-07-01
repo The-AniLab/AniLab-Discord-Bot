@@ -1,1 +1,0 @@
-// Making slash commands handler

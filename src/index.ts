@@ -1,15 +1,14 @@
 import * as dotenv from 'dotenv'
-import { Client, Events, GatewayIntentBits } from 'discord.js'
+import { Client, GatewayIntentBits } from 'discord.js'
+import { eventHandler } from '../handlers/event_handler';
+
+dotenv.config();
 
 export const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.MessageContent,
 ] });
 
-dotenv.config();
-
-client.once(Events.ClientReady, () => {
-    console.log(`${client.user!.tag} is online`);
-});
+eventHandler(client);
 
 client.login(process.env.TOKEN);
