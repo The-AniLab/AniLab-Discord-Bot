@@ -1,4 +1,16 @@
-.vscode
-node_modules
-build
+# Platform folders
+.vscode/
+.vs/
+build/
+x64/
+
+# Configuration files
 .env
+*.exe
+
+# Solution file
+*.aps
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user

@@ -1,0 +1,28 @@
+name: '🐛 Bug Report'
+description: Report errors and problems
+labels: [bug]
+body:
+  - type: dropdown
+    id: version
+    attributes:
+      label: Are you experiencing an issue with version...
+      options:
+        - Github master branch
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: '🐞 Description'
+      description: A clear and concise description of the problem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: '💡 Possible Solution'
+      description: 'Optional: only if you have suggestions on a fix/reason for the bug'
+    validations:
+      required: false
