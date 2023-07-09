@@ -25,7 +25,6 @@
 
 class Dotenv {
 public:
-    // Load .env file
     void load(const std::string& filename) {
         std::ifstream file(filename);
         if (!file.is_open()) {
@@ -34,18 +33,20 @@ public:
 
         std::string line;
         while (std::getline(file, line)) {
+            if (isComment(line)) {
+                continue;
+            }
+            expandVariables(line);
             parseLine(line);
         }
 
         file.close();
     }
 
-    // Find key in variables
     bool has(const std::string& key) const {
         return variables_.find(key) != variables_.end();
     }
 
-    // Get value from key
     std::string get(const std::string& key) const {
         if (!has(key)) {
             throw std::runtime_error("Undefined key: " + key);
@@ -56,6 +57,39 @@ public:
 
 private:
     std::unordered_map<std::string, std::string> variables_;
+
+    bool isComment(const std::string& line) {
+        return line.find("#") == 0;
+    }
+
+    void expandVariables(std::string& line) {
+        std::size_t pos = 0;
+        while ((pos = line.find('$', pos)) != std::string::npos) {
+            if (pos + 1 < line.length()) {
+                if (line[pos + 1] == '\\') {
+                    line.erase(pos, 1);
+                    ++pos;
+                } else if (line[pos + 1] == '{') {
+                    std::size_t endPos = line.find('}', pos + 2);
+                    if (endPos != std::string::npos) {
+                        std::string varName = line.substr(pos + 2, endPos - pos - 2);
+                        std::string varValue = (has(varName)) ? get(varName) : "";
+                        line.replace(pos, endPos - pos + 1, varValue);
+                        pos += varValue.length();
+                    } else {
+                        ++pos;
+                    }
+                } else {
+                    std::string varName = line.substr(pos + 1);
+                    std::string varValue = (has(varName)) ? get(varName) : "";
+                    line.replace(pos, varName.length() + 1, varValue);
+                    pos += varValue.length();
+                }
+            } else {
+                break;
+            }
+        }
+    }
 
     void parseLine(const std::string& line) {
         std::istringstream iss(line);
