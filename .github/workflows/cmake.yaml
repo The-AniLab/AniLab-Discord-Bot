@@ -30,5 +30,6 @@ jobs:
           
       - name: Run test
         run: |
+          cd build
           cd Release
           ./Anilab-Discord-Bot.exe
