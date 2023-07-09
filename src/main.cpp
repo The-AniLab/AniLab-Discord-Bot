@@ -33,7 +33,7 @@ int main()
     dotenv.load(".env");
 
     const auto encodeToken = dotenv.get("ENCODE_CLIENT_TOKEN");
-    const auto token = decode(encodeToken);
+    const auto token = Decoder::Decode(encodeToken);
 
     dpp::cluster client(token, dpp::i_all_intents);
     client.on_log(dpp::utility::cout_logger());
