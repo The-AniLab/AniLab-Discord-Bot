@@ -22,6 +22,15 @@
 #include <dpp/dpp.h>
 
 #include <cmd_struct.h>
+#include <cmd_lists.h>
 
 inline std::map<std::string, Command> commands
-{ };
+{ 
+    // Common commands
+    {
+        "ping",
+        {
+            "Check bot latency", ping 
+        }
+    },
+};

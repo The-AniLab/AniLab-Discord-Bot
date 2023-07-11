@@ -21,7 +21,7 @@
 
 #include <cmd_layout.h>
 
-inline void slashCommandCreate(dpp::cluster& client)
+inline void slashcommand_create(dpp::cluster& client)
 {
 	if (dpp::run_once<struct register_commands>())
 	{

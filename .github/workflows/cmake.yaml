@@ -19,7 +19,7 @@ jobs:
 
       - name: Create env file
         run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+          echo "${{ secrets.ENCODE_CLIENT_TOKEN }}" > .env
 
       - name: Generate CMake and build
         run: |
@@ -27,3 +27,6 @@ jobs:
           cd build
           cmake -G "Visual Studio 17 2022" -A x64 ..
           cmake --build . --config Release
+
+      - name: Run test
+        run: cd build/Release && ./Anilab

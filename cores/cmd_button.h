@@ -37,48 +37,48 @@ struct Session
 	}
 };
 
-inline std::unordered_map<uint64_t, Session> cachedSessions;
-inline std::shared_mutex cachedSessionsMutex;
-inline uint64_t customIdCounter;
+inline std::unordered_map<uint64_t, Session> cached_sessions;
+inline std::shared_mutex cached_sessions_mutex;
+inline uint64_t custom_id_counter;
 
 inline void clear()
 {
-	std::unique_lock l(cachedSessionsMutex);
+	std::unique_lock l(cached_sessions_mutex);
 
-	auto it = cachedSessions.begin();
+	auto it = cached_sessions.begin();
 
 	// Time check button to clear
-	while (it != cachedSessions.end())
+	while (it != cached_sessions.end())
 	{
 		if (it->second.isExpired())
 		{
-			assert(!cachedSessions.empty());
-			it = cachedSessions.erase(it);
+			assert(!cached_sessions.empty());
+			it = cached_sessions.erase(it);
 		}
 		else ++it;
 	}
 }
 
-inline void buttonBind(dpp::component& component, const std::function<bool(const dpp::button_click_t&)>& function, uint16_t cache_duration = 10)
+inline void button_bind(dpp::component& component, const std::function<bool(const dpp::button_click_t&)>& function, uint16_t cache_duration = 10)
 {
 	clear();
 
-	std::unique_lock l(cachedSessionsMutex);
+	std::unique_lock l(cached_sessions_mutex);
 	bool custom_id_already_exists;
 
 	do
 	{
 		// Checking initial button create
-		if (customIdCounter >= UINT_LEAST64_MAX)
-			customIdCounter = 0;
+		if (custom_id_counter >= UINT_LEAST64_MAX)
+			custom_id_counter = 0;
 
-		customIdCounter++;
-		custom_id_already_exists = cachedSessions.find(customIdCounter) != cachedSessions.end();
+		custom_id_counter++;
+		custom_id_already_exists = cached_sessions.find(custom_id_counter) != cached_sessions.end();
 
 		// Checking if existence
 		if (!custom_id_already_exists)
 		{
-			component.custom_id = std::to_string(customIdCounter);
+			component.custom_id = std::to_string(custom_id_counter);
 
 			Session session;
 
@@ -87,13 +87,13 @@ inline void buttonBind(dpp::component& component, const std::function<bool(const
 
 			component.custom_id += ID_SPACING + std::to_string(static_cast<long int>(session.created_at));
 
-			cachedSessions[customIdCounter] = session;
+			cached_sessions[custom_id_counter] = session;
 			custom_id_already_exists = false;
 		}
 	} while (custom_id_already_exists);
 }
 
-inline void buttonBuilder(const dpp::button_click_t& event)
+inline void button_builder(const dpp::button_click_t& event)
 {
 	uint64_t custom_id;
 	time_t creation_timestamp;
@@ -125,17 +125,17 @@ inline void buttonBuilder(const dpp::button_click_t& event)
 		return;
 	}
 
-	std::unique_lock l(cachedSessionsMutex);
-	const auto existing = cachedSessions.find(custom_id);
+	std::unique_lock l(cached_sessions_mutex);
+	const auto existing = cached_sessions.find(custom_id);
 
-	if (existing != cachedSessions.end() && existing->second.created_at == creation_timestamp && !existing->second.isExpired())
+	if (existing != cached_sessions.end() && existing->second.created_at == creation_timestamp && !existing->second.isExpired())
 	{
 		bool forget = existing->second.function(event);
 
 		// If forget the button
 		if (forget)
 		{
-			cachedSessions.erase(existing);
+			cached_sessions.erase(existing);
 		}
 	}
 }

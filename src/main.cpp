@@ -22,10 +22,12 @@
 #include <dpp/dpp.h>
 #include <spdlog/spdlog.h>
 
-#include <dotenv.h>
-#include <decoder.h>
-#include <button.h>
-#include <cmd_config.h>
+#include <client_dotenv.h>
+#include <client_decoder.h>
+#include <cmd_configure.h>
+#include <cmd_button.h>
+#include <cmd_lists.h>
+#include <cmd_struct.h>
 
 int main() 
 {
@@ -45,13 +47,13 @@ int main()
 
             try
             {
-                slashCommandCreate(client);
+                slashcommand_create(client);
                 fmt::print("[{}]: Successfully registered application (/) commands!\n", dpp::utility::current_date_time());
             }
             catch (...) { }
         });
 
-    client.on_button_click([](const dpp::button_click_t& event) { buttonBuilder(event); });
+    client.on_button_click([](const dpp::button_click_t& event) { button_builder(event); });
 
     client.on_slashcommand([&client](const dpp::slashcommand_t& event)
 		{
