@@ -8,7 +8,7 @@ aux_source_directory(src/cmd_moderation moderation)
 add_executable(${PROJECT_NAME} ${mainsrc} ${common} ${moderation} "Anilab.rc")
 
 target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/lib/dpp.lib)
-target_include_directories(${PROJECT_NAME} PRIVATE "cores" "include" "lib")
+target_include_directories(${PROJECT_NAME} PRIVATE "cores" "include" "include/dpp" "lib")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD 17

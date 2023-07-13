@@ -1,0 +1,7 @@
+{
+    "PING":
+    {
+        "websocket": "Average Websocket Ping: ",
+        "roundtrip": "Roundtrip latency: "
+    }
+}
