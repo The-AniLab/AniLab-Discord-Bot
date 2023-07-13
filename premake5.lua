@@ -17,7 +17,8 @@ project "Anilab"
 	libdirs    { "lib" }
 	links      { "dpp.lib" }
 	files      { 
-		"src/**.cpp", 
+		"src/**.cpp",
+        "src/cmd_common/**.cpp",
 		"cores/**.h",
 		"Anilab.rc",
         "resource.h"
