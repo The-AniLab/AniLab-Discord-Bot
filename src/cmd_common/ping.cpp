@@ -14,7 +14,7 @@ void ping(dpp::cluster& client, const dpp::slashcommand_t& event)
 	const auto rest_ping = fmt::format("`{0:.02f} ms`", event.from->creator->rest_ping * 1000);
 	
 	json language_config;
-	std::ifstream language("../../languages/en-us.json");
+	std::ifstream language("./languages/en-us.json");
 
 	language >> language_config;
 	auto ping_embed = language_config["PING"];
