@@ -13,7 +13,7 @@ project "Anilab"
 	targetdir ("%{wks.location}/x64/%{cfg.buildcfg}")
 	objdir    ("%{wks.location}/x64/%{cfg.buildcfg}")
 
-	includedirs{ "include", "cores" }
+	includedirs{ "include", "include/dpp", "cores" }
 	libdirs    { "lib" }
 	links      { "dpp.lib" }
 	files      { 
