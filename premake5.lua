@@ -15,7 +15,7 @@ project "Anilab"
 
 	includedirs{ "include", "include/dpp", "cores" }
 	libdirs    { "lib" }
-	links      { "dpp.lib" }
+	links      { "dpp.lib", "sqlite3.lib" }
 	files      { 
 		"src/**.cpp",
         "src/cmd_common/**.cpp",

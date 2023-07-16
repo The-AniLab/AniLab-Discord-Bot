@@ -1,6 +1,7 @@
 {
     "PING":
     {
+        "title": "",
         "websocket": "",
         "roundtrip": ""
     }
