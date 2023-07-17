@@ -1,4 +1,9 @@
 {
+    "LANGUAGE":
+    {
+        "title": "Language changed complete",
+        "description": "Language has been set to English"
+    },
     "PING":
     {
         "title": "Latency result",

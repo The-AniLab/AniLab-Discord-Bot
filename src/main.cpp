@@ -28,6 +28,7 @@
 #include <cmd_button.h>
 #include <cmd_lists.h>
 #include <cmd_struct.h>
+#include <db_create.h>
 
 int main() 
 {
@@ -64,6 +65,7 @@ int main()
 				filter->second.function(client, event);
 		});
 
+    db_load();
     SetConsoleTitle(TEXT("Anilab Discord Bot"));
 
     client.start(dpp::st_wait);

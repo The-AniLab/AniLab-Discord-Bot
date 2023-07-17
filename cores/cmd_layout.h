@@ -33,4 +33,16 @@ inline std::map<std::string, Command> commands
             "Check bot latency", ping 
         }
     },
+    {
+        "language",
+        {
+            "Configure bot language to show to you", language,
+            {
+                dpp::command_option(dpp::co_string, "option", "Your language option", true)
+                    .add_choice(dpp::command_option_choice("English", std::string("english")))
+                    .add_choice(dpp::command_option_choice("日本語", std::string("japanese")))
+                    .add_choice(dpp::command_option_choice("Tiếng Việt", std::string("vietnamese")))
+            }
+        }
+    },
 };

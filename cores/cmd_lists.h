@@ -24,6 +24,7 @@
 
 // Common commands
 void ping(dpp::cluster& client, const dpp::slashcommand_t& event);
+void language(dpp::cluster& client, const dpp::slashcommand_t& event);
 
 // Moderation commands
 // ...
