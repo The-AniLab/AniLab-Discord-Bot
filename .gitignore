@@ -3,6 +3,7 @@
 .vs/
 build/
 x64/
+database/
 
 # Configuration files
 .env

@@ -23,6 +23,7 @@
 
 #include <cmd_lists.h>
 #include <db_handler.h>
+#include <embed_builder.h>
 
 using json = nlohmann::json;
 
@@ -33,28 +34,7 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
     DatabaseHandler database;
     database.open("./database/language.db");
 
-    const auto find_user = fmt::format("id = '{}'", event.command.usr.id);
+    json language_config;
 
-    if (language == "english")
-    {
-        auto status = database.findRecordID("configuration", find_user);
-
-        if (status != -1)
-            database.deleteRecord("configuration", find_user);
-
-        // Test only - Not a final code result
-        json language_config;
-        std::ifstream language_file("./languages/en-us.json");
-    
-        language_file >> language_config;
-        auto language_embed = language_config["LANGUAGE"];
-    
-        auto create_embed = dpp::embed()
-	        .set_title(language_embed["title"])
-	        .set_color(0x38ff9b)
-	        .set_description(language_embed["description"])
-	        .set_timestamp(time(0));
-    
-	    event.reply(dpp::message().add_embed(create_embed));
-    }
+    // Under-construction
 }

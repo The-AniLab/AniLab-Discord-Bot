@@ -14,11 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
+#pragma once
 
 #include <stdexcept>
+#include <sstream>
 #include <fstream>
 #include <string>
 #include <sqlite3/sqlite3.h>
+
+#pragma warning(disable: 4715)
 
 class DatabaseHandler 
 {
@@ -34,6 +38,7 @@ public:
         db_filename = filename;
     }
 
+    // "CREATE TABLE IF NOT EXISTS " + tableName + " (" + columns + ");"
     void createTable(const std::string& tableName, const std::string& columns) 
     {
         std::string query = "CREATE TABLE IF NOT EXISTS " + tableName + " (" + columns + ");";
@@ -53,12 +58,36 @@ public:
         }
     }
 
-    void read(const std::string& tableName, const std::string& columnName)
+    // "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";"
+    std::string read(const std::string& tableName, const std::string& condition_1, const std::string& condition_2)
     {
-        std::string query = "SELECT " + columnName + " FROM " + tableName + ";";
-        executeQuery(query);
+        std::string query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";";
+
+        char* error_message = nullptr;
+        char** result = nullptr;
+        int rows, columns;
+        int rc = sqlite3_get_table(database, query.c_str(), &result, &rows, &columns, &error_message);
+
+        if (rc != SQLITE_OK)
+        {
+            std::string errorMessage = "SQL error: " + std::string(error_message);
+            sqlite3_free(error_message);
+            sqlite3_free_table(result);
+            throw std::runtime_error(errorMessage);
+        }
+
+        std::string value = "";
+        if (rows > 0 && columns > 0)
+        {
+            int index = 1;
+            value = result[index];
+        }
+
+        sqlite3_free_table(result);
+        return value;
     }
 
+    // std::string query = "INSERT INTO " + tableName + " VALUES (" + values + ");"
     void insert(const std::string& tableName, const std::string& values) 
     {
         std::string query = "INSERT INTO " + tableName + " VALUES (" + values + ");";
@@ -71,18 +100,20 @@ public:
         executeQuery(query);
     }
 
-    int findRecordID(const std::string& tableName, const std::string& condition) 
+    int findRecord(const std::string& tableName, const std::string& condition_1, const std::string& condition_2) 
     {
-        std::string query = "SELECT ID FROM " + tableName + " WHERE " + condition + ";";
+        std::string query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";";
 
         auto callback = [](void* idPtr, int argc, char** argv, char** azColName) -> int
         {
             int* id = static_cast<int*>(idPtr);
             if (argc > 0 && argv[0] != nullptr)
             {
-                *id = std::stoi(argv[0]);
+                std::istringstream iss(argv[0]);
+                if (!(iss >> *id))
+                    *id = -1;
             }
-            
+
             return 0;
         };
 
