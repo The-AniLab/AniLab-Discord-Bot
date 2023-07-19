@@ -50,7 +50,7 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
     {
         // If find, delete the old one and create new
         if (check_user != -1)
-            database.deleteRecord("configuration", target_user);
+            database.deleteRecord("configuration", "id=" + target_user);
 
         database.insert("configuration", target_user + ", 'ja-jp'");
     }
