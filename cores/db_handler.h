@@ -58,35 +58,6 @@ public:
         }
     }
 
-    // "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";"
-    std::string read(const std::string& tableName, const std::string& condition_1, const std::string& condition_2)
-    {
-        std::string query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";";
-
-        char* error_message = nullptr;
-        char** result = nullptr;
-        int rows, columns;
-        int rc = sqlite3_get_table(database, query.c_str(), &result, &rows, &columns, &error_message);
-
-        if (rc != SQLITE_OK)
-        {
-            std::string errorMessage = "SQL error: " + std::string(error_message);
-            sqlite3_free(error_message);
-            sqlite3_free_table(result);
-            throw std::runtime_error(errorMessage);
-        }
-
-        std::string value = "";
-        if (rows > 0 && columns > 0)
-        {
-            int index = 1;
-            value = result[index];
-        }
-
-        sqlite3_free_table(result);
-        return value;
-    }
-
     // std::string query = "INSERT INTO " + tableName + " VALUES (" + values + ");"
     void insert(const std::string& tableName, const std::string& values) 
     {
@@ -94,12 +65,14 @@ public:
         executeQuery(query);
     }
 
+    // "DELETE FROM " + tableName + " WHERE " + condition + ";"
     void deleteRecord(const std::string& tableName, const std::string& condition) 
     {
         std::string query = "DELETE FROM " + tableName + " WHERE " + condition + ";";
         executeQuery(query);
     }
 
+    // Find: query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";"
     int findRecord(const std::string& tableName, const std::string& condition_1, const std::string& condition_2) 
     {
         std::string query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";";
@@ -129,6 +102,36 @@ public:
         }
 
         return id;
+    }
+
+    // "SELECT " + targetColumn + " FROM " + tableName + " WHERE " + searchCondition + ";"
+    std::string exportData(const std::string& tableName, const std::string& targetColumn, const std::string& searchCondition)
+    {
+        std::string query = "SELECT " + targetColumn + " FROM " + tableName + " WHERE " + searchCondition + ";";
+        std::string result;
+
+        auto callback = [](void* data, int argc, char** argv, char** azColName) -> int
+        {
+            if (argc > 0 && argv[0] != nullptr)
+            {
+                auto& result = *static_cast<std::string*>(data);
+                result = argv[0];
+            }
+
+            return 0;
+        };
+
+        char* error_message = nullptr;
+        int rc = sqlite3_exec(database, query.c_str(), callback, &result, &error_message);
+
+        if (rc != SQLITE_OK) 
+        {
+            std::string errorMessage = "SQL error: " + std::string(error_message);
+            sqlite3_free(error_message);
+            throw std::runtime_error(errorMessage);
+        }
+
+        return result;
     }
 
     ~DatabaseHandler() 

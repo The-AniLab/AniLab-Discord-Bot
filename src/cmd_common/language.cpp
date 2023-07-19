@@ -32,9 +32,26 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
     const auto language = std::get<std::string>(event.get_parameter("option"));
 
     DatabaseHandler database;
-    database.open("./database/language.db");
-
     json language_config;
 
-    // Under-construction
+    database.open("./database/language.db");
+    database.createTable("configuration", "id TEXT, language TEXT");
+
+    auto target_user = fmt::format("'{}'", event.command.usr.id);
+    auto check_user = database.findRecord("configuration", "id", target_user);
+
+    if (language == "english")
+    {
+        // If find, delete it because English is default
+        if (check_user != -1)
+            database.deleteRecord("configuration", "id=" + target_user);
+    }
+    else if (language == "japanese")
+    {
+        // If find, delete the old one and create new
+        if (check_user != -1)
+            database.deleteRecord("configuration", target_user);
+
+        database.insert("configuration", target_user + ", 'ja-jp'");
+    }
 }
