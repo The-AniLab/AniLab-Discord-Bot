@@ -34,7 +34,8 @@ public:
         int rc = sqlite3_open(filename.c_str(), &database);
         if (rc != SQLITE_OK)
             throw std::runtime_error("Can't open database: " + std::string(sqlite3_errmsg(database)));
-
+        
+        executeQuery("PRAGMA synchronous=OFF;");
         db_filename = filename;
     }
 

@@ -39,6 +39,8 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
     auto target_user = fmt::format("'{}'", event.command.usr.id);
     auto check_user = database.findRecord("configuration", "id=" + target_user);
 
+    std::string change_language = "en-us";
+
     if (language == "english")
     {
         if (check_user)
@@ -49,20 +51,17 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
         if (check_user)
             database.deleteRecord("configuration", "id=" + target_user);
 
-        database.insert("configuration", target_user + ", 'ja-jp'");
+        change_language = "ja-jp";
+        database.insert("configuration", target_user + ", '" + change_language + "'");
     }
     else if (language == "vietnamese")
     {
         if (check_user)
             database.deleteRecord("configuration", "id=" + target_user);
 
-        database.insert("configuration", target_user + ", 'vi-vn'");
+        change_language = "vi-vn";
+        database.insert("configuration", target_user + ", '" + change_language + "'");
     }
-
-    std::string change_language = "en-us";
-
-    if (check_user)
-        change_language = database.exportData("configuration", "language", "id=" + target_user);
 
     auto language_file = fmt::format("./languages/{}.json", change_language);
     std::ifstream open_file(language_file);
@@ -76,5 +75,5 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
 	    .set_description(language_embed["description"])
 	    .set_timestamp(time(0));
 
-    event.edit_original_response(dpp::message().add_embed(create_embed));
+    event.reply(dpp::message().add_embed(create_embed).set_flags(dpp::m_ephemeral));
 }
