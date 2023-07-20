@@ -1,8 +1,13 @@
 {
+    "LANGUAGE":
+    {
+        "title": "成功!",
+        "description": "言語は `日本語` に設定されています"
+    },
     "PING":
     {
-        "title": "",
-        "websocket": "",
-        "roundtrip": ""
+        "title": "レイテンシの結果",
+        "websocket": "平均 Websocket Ping",
+        "roundtrip": "往復遅延"
     }
 }

@@ -23,7 +23,6 @@
 
 #include <cmd_lists.h>
 #include <db_handler.h>
-#include <embed_builder.h>
 
 using json = nlohmann::json;
 
@@ -38,20 +37,44 @@ void language(dpp::cluster& client, const dpp::slashcommand_t& event)
     database.createTable("configuration", "id TEXT, language TEXT");
 
     auto target_user = fmt::format("'{}'", event.command.usr.id);
-    auto check_user = database.findRecord("configuration", "id", target_user);
+    auto check_user = database.findRecord("configuration", "id=" + target_user);
 
     if (language == "english")
     {
-        // If find, delete it because English is default
-        if (check_user != -1)
+        if (check_user)
             database.deleteRecord("configuration", "id=" + target_user);
     }
     else if (language == "japanese")
     {
-        // If find, delete the old one and create new
-        if (check_user != -1)
+        if (check_user)
             database.deleteRecord("configuration", "id=" + target_user);
 
         database.insert("configuration", target_user + ", 'ja-jp'");
     }
+    else if (language == "vietnamese")
+    {
+        if (check_user)
+            database.deleteRecord("configuration", "id=" + target_user);
+
+        database.insert("configuration", target_user + ", 'vi-vn'");
+    }
+
+    std::string change_language = "en-us";
+
+    if (check_user)
+        change_language = database.exportData("configuration", "language", "id=" + target_user);
+
+    auto language_file = fmt::format("./languages/{}.json", change_language);
+    std::ifstream open_file(language_file);
+
+    open_file >> language_config;
+
+    auto language_embed = language_config["LANGUAGE"];
+    auto create_embed = dpp::embed()
+	    .set_title(language_embed["title"])
+	    .set_color(0x38ff9b)
+	    .set_description(language_embed["description"])
+	    .set_timestamp(time(0));
+
+    event.edit_original_response(dpp::message().add_embed(create_embed));
 }

@@ -4,14 +4,12 @@ project(Anilab VERSION 1.0.0 DESCRIPTION "The ultimate anime bot for all servers
 aux_source_directory(src mainsrc)
 aux_source_directory(src/cmd_common common)
 aux_source_directory(src/cmd_moderation moderation)
-aux_source_directory(src/embed_builder embed_builder)
 
 add_executable(
     ${PROJECT_NAME} 
     ${mainsrc} 
     ${common} 
-    ${moderation} 
-    ${embed_builder} 
+    ${moderation}
     "Anilab.rc"
 )
 

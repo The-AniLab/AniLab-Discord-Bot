@@ -1,13 +1,13 @@
 {
     "LANGUAGE":
     {
-        "title": "Hoàn thành!",
+        "title": "Thành công!",
         "description": "Ngôn ngữ đã được đổi thành `Tiếng Việt`"
     },
     "PING":
     {
-        "title": "Kết quả",
-        "websocket": "Độ trễ trung bình",
-        "roundtrip": "Độ trễ toàn phần"
+        "title": "Kết quả độ trễ",
+        "websocket": "Ping Websocket trung bình",
+        "roundtrip": "Độ trễ khứ hồi"
     }
 }

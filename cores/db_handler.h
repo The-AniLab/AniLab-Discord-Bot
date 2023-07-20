@@ -73,26 +73,24 @@ public:
     }
 
     // Find: query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";"
-    int findRecord(const std::string& tableName, const std::string& condition_1, const std::string& condition_2) 
+    bool findRecord(const std::string& tableName, const std::string& searchCondition) 
     {
-        std::string query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";";
+        std::string query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + searchCondition + ";";
+        int resultCount = 0;
 
-        auto callback = [](void* idPtr, int argc, char** argv, char** azColName) -> int
+        auto callback = [](void* data, int argc, char** argv, char** azColName) -> int
         {
-            int* id = static_cast<int*>(idPtr);
             if (argc > 0 && argv[0] != nullptr)
             {
-                std::istringstream iss(argv[0]);
-                if (!(iss >> *id))
-                    *id = -1;
+                auto& count = *static_cast<int*>(data);
+                count = std::stoi(argv[0]);
             }
 
             return 0;
         };
 
-        int id = -1;
         char* error_message = nullptr;
-        int rc = sqlite3_exec(database, query.c_str(), callback, &id, &error_message);
+        int rc = sqlite3_exec(database, query.c_str(), callback, &resultCount, &error_message);
 
         if (rc != SQLITE_OK) 
         {
@@ -101,7 +99,7 @@ public:
             throw std::runtime_error(errorMessage);
         }
 
-        return id;
+        return resultCount > 0;
     }
 
     // "SELECT " + targetColumn + " FROM " + tableName + " WHERE " + searchCondition + ";"
