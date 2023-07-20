@@ -22,33 +22,46 @@
 #include <nlohmann/json.hpp>
 
 #include <cmd_lists.h>
+#include <db_handler.h>
 
 using json = nlohmann::json;
 
 void ping(dpp::cluster& client, const dpp::slashcommand_t& event)
 {
-	const auto ws_ping = fmt::format("`{0:.02f} ms`", event.from->websocket_ping * 1000);
-	const auto rest_ping = fmt::format("`{0:.02f} ms`", event.from->creator->rest_ping * 1000);
-	
-	json language_config;
-	std::ifstream language("./languages/en-us.json");
+    const auto ws_ping = fmt::format("`{0:.02f} ms`", event.from->websocket_ping * 1000);
+    const auto rest_ping = fmt::format("`{0:.02f} ms`", event.from->creator->rest_ping * 1000);
 
-	language >> language_config;
-	auto ping_embed = language_config["PING"];
+    DatabaseHandler database;
+    json language_config;
 
-	auto create_embed = dpp::embed()
-		.set_title(ping_embed["title"])
-		.set_color(0x9dc3f8)
-		.add_field(ping_embed["websocket"], ws_ping, true)
-		.add_field(ping_embed["roundtrip"], rest_ping, true)
-		.set_thumbnail(client.me.get_avatar_url(1024, dpp::i_webp))
-		.set_footer(
-			dpp::embed_footer()
-				.set_text(client.me.format_username())
-				.set_icon(client.me.get_avatar_url()
-			)
-		)
-		.set_timestamp(time(0));
+    database.open("./database/language.db");
 
-	event.reply(dpp::message().add_embed(create_embed));
+    auto target_user = fmt::format("'{}'", event.command.usr.id);
+    auto check_user = database.findRecord("configuration", "id=" + target_user);
+
+    std::string change_language = "en-us";
+    if (check_user)
+        change_language = database.exportData("configuration", "language", "id=" + target_user);
+
+    std::string language_file = fmt::format("./languages/{}.json", change_language);
+    std::ifstream open_file(language_file);
+
+    open_file >> language_config;
+
+    auto ping_embed = language_config["PING"];
+    
+    auto create_embed = dpp::embed()
+        .set_title(ping_embed["title"])
+        .set_color(0x9dc3f8)
+        .add_field(ping_embed["websocket"], ws_ping, true)
+        .add_field(ping_embed["roundtrip"], rest_ping, true)
+        .set_thumbnail(client.me.get_avatar_url(1024, dpp::i_webp))
+        .set_footer(
+            dpp::embed_footer()
+            .set_text(client.me.format_username())
+            .set_icon(client.me.get_avatar_url())
+        )
+        .set_timestamp(time(0));
+
+    event.reply(dpp::message().add_embed(create_embed));
 }

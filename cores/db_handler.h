@@ -73,7 +73,7 @@ public:
         executeQuery(query);
     }
 
-    // Find: query = "SELECT " + condition_1 + " FROM " + tableName + " WHERE " + condition_2 + ";"
+    // Find: "SELECT COUNT(*) FROM " + tableName + " WHERE " + searchCondition + ";"
     bool findRecord(const std::string& tableName, const std::string& searchCondition) 
     {
         std::string query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + searchCondition + ";";

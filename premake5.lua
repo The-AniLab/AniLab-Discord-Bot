@@ -20,8 +20,6 @@ project "Anilab"
 		"src/**.cpp",
         "src/cmd_common/**.cpp",
 		"src/cmd_moderation/**.cpp",
-		"src/database/**.cpp",
-		"src/embed_builder/**.cpp",
 		"cores/**.h",
 		"Anilab.rc",
         "resource.h"
