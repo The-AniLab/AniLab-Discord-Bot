@@ -12,7 +12,7 @@ The ultimate anime bot for all servers! <br />
 [![GitHub issues](https://img.shields.io/github/issues/harshfeudal/Tsukasa-Tsukuyomi)](https://github.com/The-AniLab/AniLab-Discord-Bot/issues) <br />
 [![Discord](https://img.shields.io/discord/1103255588051357696?style=flat&logo=discord)](https://discord.gg/pAZZfqC5ST)
 [![GitHub license](https://img.shields.io/github/license/harshfeudal/Tsukasa-Tsukuyomi?color=brightgreen)](https://github.com/https://github.com/The-AniLab/AniLab-Discord-Bot/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/harshfeudal/Tsukasa-Tsukuyomi?color=brightgreen)](https://github.com/The-AniLab/AniLab-Discord-Bot/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/The-AniLab/AniLab-Discord-Bot?color=brightgreen)](https://github.com/The-AniLab/AniLab-Discord-Bot/stargazers)
 
 </div>
 
