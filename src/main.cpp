@@ -48,9 +48,18 @@ int main()
             try
             {
                 slashcommand_create(client);
-                fmt::print("[{}]: Successfully registered application (/) commands!\n", dpp::utility::current_date_time());
+                fmt::print(
+                    "[{}]: Successfully registered application (/) commands!\n", 
+                    dpp::utility::current_date_time()
+                );
             }
-            catch (...) { }
+            catch (...) 
+            { 
+                fmt::print(
+                    "[{}]: Fail to register application (/) commands!\n", 
+                    dpp::utility::current_date_time()
+                );
+            }
         });
 
     client.on_button_click([](const dpp::button_click_t& event) { button_builder(event); });

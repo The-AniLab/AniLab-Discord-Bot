@@ -1,8 +1,13 @@
 {
+    "LANGUAGE":
+    {
+        "title": "Success!",
+        "description": "Language has been set to `English`"
+    },
     "PING":
     {
-        "title": "",
-        "websocket": "",
-        "roundtrip": ""
+        "title": "Latency result",
+        "websocket": "Average Websocket Ping",
+        "roundtrip": "Roundtrip latency"
     }
 }
