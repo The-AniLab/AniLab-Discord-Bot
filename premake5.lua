@@ -15,10 +15,11 @@ project "Anilab"
 
 	includedirs{ "include", "include/dpp", "cores" }
 	libdirs    { "lib" }
-	links      { "dpp.lib", "sqlite3.lib" }
+	links      { "dpp.lib", "sqlite3.lib", "python39.lib" }
 	files      { 
 		"src/**.cpp",
         "src/cmd_common/**.cpp",
+		"src/cmd_mihoyo/**.cpp",
 		"src/cmd_moderation/**.cpp",
 		"cores/**.h",
 		"Anilab.rc",
