@@ -45,4 +45,12 @@ inline std::map<std::string, Command> commands
             }
         }
     },
+
+    // miHoYo commands
+    {
+        "login",
+        {
+            "Login into miHoYo account", login
+        }
+    },
 };
